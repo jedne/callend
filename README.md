@@ -1,0 +1,5 @@
+# callend
+手机黑名单，拦截电话和短信，并记录日志
+
+拦截电话是通过反射出系统TelephonyManager，从而获得ITelephony，然后调用endCall来挂掉电话。
+短信是通过监听短信广播，通过设置权限到int最大值来提升权限，在收到广播后调用abortBroadcast来结束广播传递。
