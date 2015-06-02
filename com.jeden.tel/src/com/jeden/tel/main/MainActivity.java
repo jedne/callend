@@ -1,6 +1,9 @@
-package com.jeden.tel;
+package com.jeden.tel.main;
+
+import com.jeden.tel.R;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +20,7 @@ public class MainActivity extends Activity implements OnClickListener
 	public Button delete;
 	
 	public Button clear;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) 
     {
@@ -25,8 +29,16 @@ public class MainActivity extends Activity implements OnClickListener
         init();
     }
 
+    /**
+     * 初始化组件
+     */
     public void init()
     {
+    	// 启动后台服务，监听短信
+    	Intent sintent = new Intent(this, MainService.class);
+    	sintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+    	startService(sintent);
+    	
     	SharedPreferences sp = this.getSharedPreferences("jeden_tel",
     			MainActivity.MODE_PRIVATE);
     	// 获取已经添加的电话
@@ -49,6 +61,12 @@ public class MainActivity extends Activity implements OnClickListener
     	delete.setOnClickListener(this);
     	clear.setOnClickListener(this);
     }
+    
+    /**
+     * 添加或者删除电话
+     * 
+     * @param delete	是否是删除电话
+     */
     public void addOrDelete(boolean delete)
     {
     	EditText addedit = (EditText)findViewById(R.id.add_edit);
@@ -94,6 +112,4 @@ public class MainActivity extends Activity implements OnClickListener
 			hestoryedit.setText("");
 		}
 	}
-
-    
 }

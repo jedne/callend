@@ -1,4 +1,4 @@
-package com.jeden.tel;
+package com.jeden.tel.tools;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,6 +25,7 @@ public class Tool
 		}
 		return path;
 	}
+	
 	/**
 	 * 打印log并保存log文件
 	 */
@@ -55,7 +56,7 @@ public class Tool
 		{
 			return;
 		}
-		String path =  header + "/bflog";
+		String path =  header + "/tellog";
 		
 		File file = new File(path);
 		if (!file.exists())

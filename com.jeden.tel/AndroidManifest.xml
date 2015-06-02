@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".main.MainActivity"
             android:label="@string/title_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,19 +20,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".SmsReceive">
-		<intent-filter android:priority="2147483647">
-		    <action android:name="android.provider.Telephony.SMS_RECEIVED" />
-		</intent-filter>
-		
+		<receiver android:name=".main.TelReceive">
+			<intent-filter>
+			 	<action android:name="android.intent.action.PHONE_STATE"/>           
+	            <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+			</intent-filter>
 		</receiver>
-		<receiver android:name=".TelReceive">
-		<intent-filter>
-		 	<action android:name="android.intent.action.PHONE_STATE"/>           
-            <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
-		</intent-filter>
-		
-		</receiver>
+		<receiver android:name=".main.BootBroadcastReceiver">
+		    <intent-filter>
+		        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+		        <category android:name="android.intent.category.HOME"/>
+		    </intent-filter>
+	    </receiver>
+	    <service android:name=".main.MainService"/>
     </application>
 	<!-- 短信截获 -->
 	<uses-permission android:name="android.permission.SEND_SMS"/>  
@@ -50,4 +50,6 @@
     <uses-permission android:name="android.permission.READ_OWNER_DATA" />
     <uses-permission android:name="android.permission.WRITE_OWNER_DATA" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> 
+    <!-- 开机 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />  
 </manifest>

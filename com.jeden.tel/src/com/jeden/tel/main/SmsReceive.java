@@ -1,4 +1,6 @@
-package com.jeden.tel;
+package com.jeden.tel.main;
+
+import com.jeden.tel.tools.Tool;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
