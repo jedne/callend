@@ -1,13 +1,13 @@
 package com.jeden.tel.main;
 
-import com.jeden.tel.tools.Tool;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+
+import com.jeden.tel.tools.DataBean;
+import com.jeden.tel.tools.Tool;
 
 
 public class SmsReceive extends BroadcastReceiver
@@ -39,23 +39,15 @@ public class SmsReceive extends BroadcastReceiver
 		            SMSContent.append(message.getDisplayMessageBody());  
 		            Tool.BfLog( "收到的短信：："+"来信号码：" + SMSAddress + "\n短信内容："  
 		                    + SMSContent);
-		            SharedPreferences sp = context.getSharedPreferences("jeden_tel",
-			    			MainActivity.MODE_PRIVATE);
-		            String tels = sp.getString("tels", null);
-		            if(tels != null)
-		            {
-		            	String[] telstemp = tels.split(",");
-		            	for(String temp:telstemp)
-		            	{
-		            		if(temp.contains(SMSAddress))
-		            		{
-		            			String hestory = sp.getString("hestory", null);
-		            			hestory = hestory + "\n 收到："+SMSAddress + "发的短信："+SMSContent;
-		            			sp.edit().putString("hestory", hestory).commit();
-		    	            	abortBroadcast();
-		            		}
-		            	}
-		            }
+		            String[] telstemp = DataBean.getInstance().getBlackList();
+	            	for(String temp:telstemp)
+	            	{
+	            		if(temp.contains(SMSAddress))
+	            		{
+	            			DataBean.getInstance().addMsgItem(SMSAddress + "," + SMSContent);
+	    	            	abortBroadcast();
+	            		}
+	            	}
 	            }
 			}
 		}

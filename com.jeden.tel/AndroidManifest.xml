@@ -52,4 +52,6 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> 
     <!-- 开机 -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />  
+    <!-- 读取联系人 -->  
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>  
 </manifest>

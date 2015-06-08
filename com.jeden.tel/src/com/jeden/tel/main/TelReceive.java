@@ -6,11 +6,13 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.RemoteException;
 import android.telephony.TelephonyManager;
+import android.text.format.Time;
+
 import com.android.internal.telephony.ITelephony;
+import com.jeden.tel.tools.DataBean;
 import com.jeden.tel.tools.Tool;
 
 public class TelReceive extends BroadcastReceiver
@@ -68,29 +70,26 @@ public class TelReceive extends BroadcastReceiver
 	 */
 	public void isInBlackList(Context context, String num)
 	{
-		SharedPreferences sp = context.getSharedPreferences("jeden_tel",
-	    			MainActivity.MODE_PRIVATE);
-		String tels = sp.getString("tels", null);
-	    if(tels != null)
-	    {
-	     	String telstemp[] = tels.split(",");
-	     	for(String temp:telstemp)
-	     	{
-	            if(temp.contains(num))  
-	            {
-	            	// 拦截来电
-	                stop(context, num);
-	                 
-	                // 记录日志
-	                String hestory = sp.getString("hestory", "");
-	                hestory = hestory + "\n 拦截到了电话：" + num;
-	                sp.edit().putString("hestory", hestory).commit();
-	                 
-	                // 截断广播
-	                //abortBroadcast();
-	            }
-	     	}
-	    }
+		String telstemp[] = DataBean.getInstance().getBlackList();
+     	for(String temp:telstemp)
+     	{
+            if(temp.contains(num))  
+            {
+            	// 拦截来电
+                stop(context, num);
+                 
+                // 记录日志
+                Time time = new Time("GMT+8");    
+                time.setToNow(); 
+                
+                String times = time.year+"."+time.month+"."+time.monthDay+" "+time.hour+":"
+                				+time.minute+":"+time.second;
+                DataBean.getInstance().addTelItem(num + "," + times);
+                
+                // 截断广播
+                //abortBroadcast();
+            }
+     	}
 	}
 	
 	/**

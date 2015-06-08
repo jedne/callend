@@ -1,0 +1,12 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.adplugin.sdk.MainActivity$PlaceholderFragment" >
+    <ListView 
+        android:id="@+id/content_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        
+    </ListView>
+</RelativeLayout>

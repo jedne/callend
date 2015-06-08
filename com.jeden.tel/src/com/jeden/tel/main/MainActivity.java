@@ -1,25 +1,40 @@
 package com.jeden.tel.main;
 
-import com.jeden.tel.R;
+import java.util.ArrayList;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.MarginLayoutParams;
+import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageView;
 
-public class MainActivity extends Activity implements OnClickListener
+import com.jeden.tel.R;
+import com.jeden.tel.tools.DataBean;
+
+public class MainActivity extends FragmentActivity implements OnClickListener
 {
-	public String tels;
-	public String hestory;
+	private Button title_msg, title_tel, title_black;
 	
-	public Button add;
-	public Button delete;
+	private ImageView image;
 	
-	public Button clear;
+	private ViewPager viewpager;
+	
+	private ArrayList<Fragment> fragmentlist;
+	
+	private int screenW;
+	
+	private MarginLayoutParams imageLayoutParams;
+	
+	public Button bottomBtn;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -27,8 +42,14 @@ public class MainActivity extends Activity implements OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        
+        initTitle();
+        
+        initImage();
+        
+        initViewPager();
     }
-
+    
     /**
      * 初始化组件
      */
@@ -39,77 +60,158 @@ public class MainActivity extends Activity implements OnClickListener
     	sintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
     	startService(sintent);
     	
-    	SharedPreferences sp = this.getSharedPreferences("jeden_tel",
-    			MainActivity.MODE_PRIVATE);
-    	// 获取已经添加的电话
-		tels = sp.getString("tels", "");
-    	// 获取已经拦截到的内容
-		hestory = sp.getString("hestory", "");
-		
-		// 显示
-		EditText teledit = (EditText)findViewById(R.id.tels);
-		EditText hestoryeidt = (EditText)findViewById(R.id.hestory);
-		teledit.setText(tels);
-		hestoryeidt.setText(hestory);
-		
-    	// 注册监听事件
-    	add = (Button) findViewById(R.id.add_tel);
-    	delete = (Button) findViewById(R.id.cancel_tel);
-    	clear = (Button) findViewById(R.id.clear_tel);
-    	
-    	add.setOnClickListener(this);
-    	delete.setOnClickListener(this);
-    	clear.setOnClickListener(this);
+    	// 初始化数据
+    	DataBean.getInstance().init(this);
     }
-    
+
     /**
-     * 添加或者删除电话
-     * 
-     * @param delete	是否是删除电话
+	 * 初始化标题
+	 */
+	private void initTitle()
+	{
+		title_tel = (Button) findViewById(R.id.title_tel);
+		title_msg = (Button) findViewById(R.id.title_msg);
+		title_black = (Button) findViewById(R.id.title_black);
+		bottomBtn = (Button) findViewById(R.id.bottom_btn);
+		
+		title_tel.setOnClickListener(new BtnListener(0));
+		title_msg.setOnClickListener(new BtnListener(1));
+		title_black.setOnClickListener(new BtnListener(2));
+		bottomBtn.setOnClickListener(this);
+	}
+	
+	public class BtnListener implements View.OnClickListener
+	{
+		private int index = 0;
+		
+		public BtnListener(int i)
+		{
+			index = i;
+		}
+
+		@Override
+		public void onClick(View v) 
+		{
+			viewpager.setCurrentItem(index);
+			setBottomBtnState(index);
+		}
+	}
+	
+	/**
+	 * 初始化滚动条
+	 */
+	private void initImage()
+	{
+		image = (ImageView) findViewById(R.id.title_cursor);
+		image.setBackgroundColor(Color.parseColor("#A0A0A0"));
+		
+		WindowManager wm = (WindowManager) this.getSystemService(Context.WINDOW_SERVICE);
+		screenW = wm.getDefaultDisplay().getWidth();
+        imageLayoutParams = (MarginLayoutParams)image.getLayoutParams();
+        imageLayoutParams.width = screenW/3;
+        imageLayoutParams.leftMargin = 0;
+        image.setLayoutParams(imageLayoutParams);
+	}
+	
+	/**
+	 * 初始化滑动页面
+	 */
+	private void initViewPager()
+	{
+		viewpager = (ViewPager) findViewById(R.id.content_view);
+		
+		fragmentlist = new ArrayList<Fragment>();
+		fragmentlist.add(FragmentTel.getInstance());
+		fragmentlist.add(FragmentMsg.getInstance());
+		fragmentlist.add(FragmentBlack.getInstance());
+		
+		viewpager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), fragmentlist));
+		viewpager.setCurrentItem(0);
+		viewpager.setOnPageChangeListener(new myOnPagerChangeListener());
+		
+		setBottomBtnState(0);
+	}
+
+	public class myOnPagerChangeListener implements OnPageChangeListener
+	{
+		int item;
+		@Override
+		public void onPageScrollStateChanged(int arg0)
+		{
+		}
+
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2)
+		{
+			imageLayoutParams.leftMargin = (int )(screenW/3 * arg0  + arg1 * screenW / 3);
+			image.setLayoutParams(imageLayoutParams);
+		}
+
+		@Override
+		public void onPageSelected(int arg0)
+		{
+			setBottomBtnState(arg0);
+		}
+	}
+	
+    /**
+     * 添加黑名单或者清空记录
      */
-    public void addOrDelete(boolean delete)
+    public void addOrDelete()
     {
-    	EditText addedit = (EditText)findViewById(R.id.add_edit);
-    	String teltemp = addedit.getText().toString();
-    	if(delete)
+    	int index = viewpager.getCurrentItem();
+    	
+    	if(index == 2)
     	{
-    		int star = tels.indexOf(teltemp);
-    		int end = star + teltemp.length()+1;
-    		if(star >=0)
-    		{    			
-    			String one = tels.substring(0,star);
-    			String two = tels.substring(end);
-    			tels = one + two;
-    		}
+    		// 添加信息
+    		FragmentDialog dialog = FragmentDialog.getInstance();
+    		dialog.show(getSupportFragmentManager(), "dialog");
     	}
-    	else
+    	else if(index == 1)
     	{
-    		tels = tels + teltemp + ",\n";
+    		DataBean.getInstance().delMsg();
+    		refreshFragment(index);
     	}
-    	SharedPreferences sp = this.getSharedPreferences("jeden_tel",
-    			MainActivity.MODE_PRIVATE);
-    	sp.edit().putString("tels", tels).commit();
-    	EditText teledit = (EditText)findViewById(R.id.tels);
-    	teledit.setText(tels);
+    	else if(index == 0)
+    	{
+    		DataBean.getInstance().delTel();
+    		refreshFragment(index);
+    	}
     }
     
 	public void onClick(View v) 
 	{
-		if(v == add)
+		if(v == bottomBtn)
 		{
-			addOrDelete(false);
+			addOrDelete();
 		}
-		else if(v == delete)
+	}
+	
+	public void setBottomBtnState(int index)
+	{
+		if(index == 2)
 		{
-			addOrDelete(true);
+			bottomBtn.setText("添加");
 		}
-		else if(v == clear)
+		else
 		{
-			SharedPreferences sp = this.getSharedPreferences("jeden_tel",
-	    			MainActivity.MODE_PRIVATE);
-			sp.edit().putString("hestory", "").commit();
-			EditText hestoryedit = (EditText)findViewById(R.id.hestory);
-			hestoryedit.setText("");
+			bottomBtn.setText("清空");
+		}
+	}
+	
+	public void refreshFragment(int index)
+	{
+		if(index == 0)
+		{			
+			((FragmentTel)fragmentlist.get(index)).refreshListView();
+		}
+		else if(index == 1)
+		{
+			((FragmentMsg)fragmentlist.get(index)).refreshListView();
+		}
+		else if(index == 2)
+		{
+			((FragmentBlack)fragmentlist.get(index)).refreshListView();
 		}
 	}
 }

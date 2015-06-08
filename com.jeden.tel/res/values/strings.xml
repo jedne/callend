@@ -31,5 +31,11 @@
         阿萨德发生地方艾丝凡大是大非阿萨德发</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
-
+	<string name="title_tel_string">电话</string>
+	<string name="title_msg_string">短信</string>
+	<string name="title_black_string">黑名单</string>
+	<string name="custom_input_title">添加自定义手机号码</string>
+	<string name="phonebook_input_title">选择通讯录中的号码</string>
+	<string name="custom_input_add">添加</string>
+	<string name="custom_input_hint">请输入手机号码</string>
 </resources>
