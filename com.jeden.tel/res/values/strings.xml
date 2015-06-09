@@ -1,34 +1,7 @@
 <resources>
 
     <string name="app_name">com.jeden.tel</string>
-    <string name="hello_world">阿的发/n
-        生的发生的
-        发生地方n/n
-        阿萨德发生的发生
-        的发生的发生的发生/
-        n地方阿萨德发生地方阿萨德发/n
-        司法斯蒂/n芬阿萨德发
-        阿萨德发
-        aaf啊法师打发士大夫阿萨德发
-        阿萨德发生地方艾丝凡大是大非阿萨德发
-          生的发生的
-        发生地方n/n
-        阿萨德发生的发生
-        的发生的发生的发生/
-        n地方阿萨德发生地方阿萨德发/n
-        司法斯蒂/n芬阿萨德发
-        阿萨德发
-        aaf啊法师打发士大夫阿萨德发
-        阿萨德发生地方艾丝凡大是大非阿萨德发
-          生的发生的
-        发生地方n/n
-        阿萨德发生的发生
-        的发生的发生的发生/
-        n地方阿萨德发生地方阿萨德发/n
-        司法斯蒂/n芬阿萨德发
-        阿萨德发
-        aaf啊法师打发士大夫阿萨德发
-        阿萨德发生地方艾丝凡大是大非阿萨德发</string>
+    <string name="hello_world">hello_world</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
 	<string name="title_tel_string">电话</string>
