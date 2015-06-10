@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -28,7 +27,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener
 	
 	private ViewPager viewpager;
 	
-	private ArrayList<Fragment> fragmentlist;
+	private ArrayList<BaseFragment> fragmentlist;
 	
 	private int screenW;
 	
@@ -41,6 +40,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
         init();
         
         initTitle();
@@ -80,6 +80,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener
 		bottomBtn.setOnClickListener(this);
 	}
 	
+	/**
+	 * 标签面板，按钮点击事件监听
+	 * 
+	 * @author jeden
+	 *
+	 */
 	public class BtnListener implements View.OnClickListener
 	{
 		private int index = 0;
@@ -120,18 +126,25 @@ public class MainActivity extends FragmentActivity implements OnClickListener
 	{
 		viewpager = (ViewPager) findViewById(R.id.content_view);
 		
-		fragmentlist = new ArrayList<Fragment>();
-		fragmentlist.add(FragmentTel.getInstance());
-		fragmentlist.add(FragmentMsg.getInstance());
-		fragmentlist.add(FragmentBlack.getInstance());
+		fragmentlist = new ArrayList<BaseFragment>();
+		fragmentlist.add(new FragmentTel());
+		fragmentlist.add(new FragmentMsg());
+		fragmentlist.add(new FragmentBlack());
 		
 		viewpager.setAdapter(new FragmentAdapter(getSupportFragmentManager(), fragmentlist));
 		viewpager.setCurrentItem(0);
 		viewpager.setOnPageChangeListener(new myOnPagerChangeListener());
 		
+		// 设置底部按钮的初始状态
 		setBottomBtnState(0);
 	}
 
+	/**
+	 * viewpager的切换监听
+	 * 
+	 * @author jeden
+	 *
+	 */
 	public class myOnPagerChangeListener implements OnPageChangeListener
 	{
 		int item;
@@ -155,28 +168,13 @@ public class MainActivity extends FragmentActivity implements OnClickListener
 	}
 	
     /**
-     * 添加黑名单或者清空记录
+     * 底部按钮点击事件处理
      */
     public void addOrDelete()
     {
     	int index = viewpager.getCurrentItem();
     	
-    	if(index == 2)
-    	{
-    		// 添加信息
-    		FragmentDialog dialog = FragmentDialog.getInstance();
-    		dialog.show(getSupportFragmentManager(), "dialog");
-    	}
-    	else if(index == 1)
-    	{
-    		DataBean.getInstance().delMsg();
-    		refreshFragment(index);
-    	}
-    	else if(index == 0)
-    	{
-    		DataBean.getInstance().delTel();
-    		refreshFragment(index);
-    	}
+    	fragmentlist.get(index).bottomBtnClick();
     }
     
 	public void onClick(View v) 
@@ -187,6 +185,12 @@ public class MainActivity extends FragmentActivity implements OnClickListener
 		}
 	}
 	
+	/**
+	 * 设置底部按钮的状态
+	 * 
+	 * @param index
+	 * 			当前所在的页面
+	 */
 	public void setBottomBtnState(int index)
 	{
 		if(index == 2)
@@ -196,22 +200,6 @@ public class MainActivity extends FragmentActivity implements OnClickListener
 		else
 		{
 			bottomBtn.setText("清空");
-		}
-	}
-	
-	public void refreshFragment(int index)
-	{
-		if(index == 0)
-		{			
-			((FragmentTel)fragmentlist.get(index)).refreshListView();
-		}
-		else if(index == 1)
-		{
-			((FragmentMsg)fragmentlist.get(index)).refreshListView();
-		}
-		else if(index == 2)
-		{
-			((FragmentBlack)fragmentlist.get(index)).refreshListView();
 		}
 	}
 }

@@ -57,6 +57,8 @@ public class FragmentDialog extends DialogFragment implements OnClickListener, O
 		setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light_NoTitleBar);
 		super.onCreate(savedInstanceState);
 		
+		// 初始化联系人信息
+		// TODO
 		initContacts();
 	}
 
@@ -69,6 +71,12 @@ public class FragmentDialog extends DialogFragment implements OnClickListener, O
 		return rootView;
 	}
 	
+	/**
+	 * 初始化布局
+	 * 
+	 * @param rootView
+	 * 			Fragment的根视图
+	 */
 	public void initView(View rootView)
 	{
 		addBtn = (Button) rootView.findViewById(R.id.add_btn);
@@ -91,7 +99,9 @@ public class FragmentDialog extends DialogFragment implements OnClickListener, O
 			}
 			
 			DataBean.getInstance().addBlackItem("自定义," + phone);
-			((MainActivity)getActivity()).refreshFragment(2);
+			
+			MainListener.getInstance().refreshFragmentList(FragmentBlack.FLAGS);
+			
 			Toast.makeText(getActivity(), "添加成功", Toast.LENGTH_LONG).show();
 			this.dismiss();
 		}
@@ -101,11 +111,16 @@ public class FragmentDialog extends DialogFragment implements OnClickListener, O
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) 
 	{
 		DataBean.getInstance().addBlackItem(contacts[position]);
-		((MainActivity)getActivity()).refreshFragment(2);
+
+		MainListener.getInstance().refreshFragmentList(FragmentBlack.FLAGS);
+		
 		Toast.makeText(getActivity(), "添加成功", Toast.LENGTH_LONG).show();
 		this.dismiss();
 	}
 	
+	/**
+	 * 初始化联系人信息
+	 */
 	public void initContacts()
 	{
 		StringBuilder sb = new StringBuilder();

@@ -9,7 +9,12 @@ import android.telephony.SmsMessage;
 import com.jeden.tel.tools.DataBean;
 import com.jeden.tel.tools.Tool;
 
-
+/**
+ * 短信广播的监听
+ * 
+ * @author jeden
+ *
+ */
 public class SmsReceive extends BroadcastReceiver
 {
 	public static final String ACTION_SMS_RECEIVE = "android.provider.Telephony.SMS_RECEIVED";
@@ -44,7 +49,11 @@ public class SmsReceive extends BroadcastReceiver
 	            	{
 	            		if(temp.contains(SMSAddress))
 	            		{
+	            			// 添加拦截信息
 	            			DataBean.getInstance().addMsgItem(SMSAddress + "," + SMSContent);
+	            			
+	            			MainListener.getInstance().refreshFragmentList(FragmentMsg.FLAGS);
+	            			
 	    	            	abortBroadcast();
 	            		}
 	            	}

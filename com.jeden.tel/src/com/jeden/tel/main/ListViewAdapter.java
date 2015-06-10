@@ -50,11 +50,11 @@ public class ListViewAdapter extends BaseAdapter
 		}
 		else if(state == STATE_MSG)
 		{
-			contents = DataBean.getInstance().getMsgHestory();
+			contents = DataBean.getInstance().getMsgHistory();
 		}
 		else if(state == STATE_TEL)
 		{
-			contents = DataBean.getInstance().getTelHestory();
+			contents = DataBean.getInstance().getTelHistory();
 		}
 		
 		if(contents.length == 1 && contents[0].equals(""))

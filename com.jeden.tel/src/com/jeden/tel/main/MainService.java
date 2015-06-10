@@ -25,6 +25,7 @@ public class MainService extends Service
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId)
 	{
+		// ×¢²á¶ÌÐÅ¼àÌý¹ã²¥
 		registerSmsReceiver();
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -32,10 +33,14 @@ public class MainService extends Service
 	@Override
 	public void onDestroy()
 	{
+		// ½â°ó¶ÌÐÅ¼àÌý¹ã²¥
 		unRegisterSmsReceiver();
 		super.onDestroy();
 	}
 	
+	/**
+	 * ×¢²á¶ÌÐÅ¼àÌý¹ã²¥
+	 */
 	private void registerSmsReceiver()
 	{
 	    IntentFilter filter = new IntentFilter();  
@@ -44,6 +49,9 @@ public class MainService extends Service
         registerReceiver(smsReceive, filter);  
 	}
 	
+	/**
+	 * ½â°ó¶ÌÐÅ¼àÌý
+	 */
 	private void unRegisterSmsReceiver()
 	{
 		unregisterReceiver(smsReceive);

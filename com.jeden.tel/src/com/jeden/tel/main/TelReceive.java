@@ -86,6 +86,8 @@ public class TelReceive extends BroadcastReceiver
                 				+time.minute+":"+time.second;
                 DataBean.getInstance().addTelItem(num + "," + times);
                 
+                MainListener.getInstance().refreshFragmentList(FragmentTel.FLAGS);
+    			
                 // �ضϹ㲥
                 //abortBroadcast();
             }
